@@ -1,5 +1,5 @@
 // VolleyLabs launch page: hero key-moment cycle, skeleton draw, score
-// count-up, scroll reveals and the demo video. The page is complete without
+// count-up and scroll reveals. The page is complete without
 // this file; it adds the "js" class itself so a failed load hides nothing.
 (function () {
   'use strict';
@@ -113,24 +113,26 @@
     els.forEach(function (e) { io.observe(e); });
   }
 
-  function demoVideo() {
-    var v = document.querySelector('.phone-video');
-    if (!v) return;
-    // Reduced motion, or no observer: the poster with controls, never autoplay.
-    if (reduce || !canObserve) { v.controls = true; return; }
-    new IntersectionObserver(function (entries) {
-      if (entries[0].isIntersecting) {
-        // Low Power Mode blocks autoplay: fall back to controls.
-        var playing = v.play();
-        if (playing && playing.catch) playing.catch(function () { v.controls = true; });
-      } else {
-        v.pause();
-      }
-    }, { threshold: 0.3 }).observe(v);
+  // The web fonts arrive after the first paint and change how headings wrap,
+  // which can shift a deep-linked section (Apple's reviewer opens #support)
+  // under the sticky nav in Safari. Re-align once they load, unless the
+  // visitor has already started scrolling.
+  function keepDeepLink() {
+    var id = location.hash.slice(1);
+    if (!id || !document.fonts || !document.fonts.ready) return;
+    var moved = false;
+    function touched() { moved = true; }
+    ['wheel', 'touchstart', 'keydown'].forEach(function (t) {
+      window.addEventListener(t, touched, { once: true, passive: true });
+    });
+    document.fonts.ready.then(function () {
+      var el = document.getElementById(id);
+      if (el && !moved) el.scrollIntoView();
+    });
   }
 
   hero();
   countUp();
   reveals();
-  demoVideo();
+  keepDeepLink();
 })();

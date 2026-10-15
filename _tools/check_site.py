@@ -121,8 +121,13 @@ try:
 except (IndexError, KeyError, ValueError) as e:
     check(False, f"hero-poses.js unreadable: {e!r}")
 
+# The result-screen recording shows a bystander's face in its first seconds.
+check("results-demo" not in html and not (SITE / "assets" / "results-demo.mp4").exists(),
+      "the results-demo recording shows a bystander: use the still")
+
 # Legal pages untouched.
-diff = subprocess.run(["git", "-C", str(SITE), "diff", "--quiet", "HEAD", "--",
+LEGAL_BASE = "0780f12"  # last commit that changed privacy.html / terms.html
+diff = subprocess.run(["git", "-C", str(SITE), "diff", "--quiet", LEGAL_BASE, "--",
                        "privacy.html", "terms.html"])
 check(diff.returncode == 0, "privacy.html or terms.html changed")
 
