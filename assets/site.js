@@ -1,86 +1,66 @@
-// VolleyLabs launch page: hero key-moment cycle, skeleton draw, score
-// count-up and scroll reveals. The page is complete without
-// this file; it adds the "js" class itself so a failed load hides nothing.
+// VolleyLabs launch page: the hero's key moments advance on their own (the
+// skeleton, callouts and timer bar are CSS animations that restart when a
+// frame turns "on"), the score counts up, and sections rise in on scroll.
+// The page is complete without this file; it adds the "js" class itself so a
+// failed load hides nothing.
 (function () {
   'use strict';
   document.documentElement.classList.add('js');
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var canObserve = 'IntersectionObserver' in window;
-  var SVG_NS = 'http://www.w3.org/2000/svg';
-  var W = 600, H = 750; // the hero frames' size, and the SVG viewBox
-  // Same joints, bones and confidence cut-off as the app (mobile/lib/pose.ts).
-  var BONES = [[1, 2], [1, 3], [3, 5], [2, 4], [4, 6], [1, 7], [2, 8], [7, 8],
-    [7, 9], [9, 11], [8, 10], [10, 12]];
-  var MIN_VISIBILITY = 0.5;
-  var CYCLE_MS = 2400;
-
-  function sure(p) { return p && p[2] >= MIN_VISIBILITY; }
-
-  function drawSkeleton(svg, pose, animate) {
-    svg.classList.remove('drawn');
-    svg.textContent = '';
-    if (!pose) return;
-    BONES.forEach(function (bone, i) {
-      var a = pose[bone[0]], b = pose[bone[1]];
-      if (!sure(a) || !sure(b)) return;
-      var path = document.createElementNS(SVG_NS, 'path');
-      path.setAttribute('d', 'M' + a[0] * W + ' ' + a[1] * H + 'L' + b[0] * W + ' ' + b[1] * H);
-      path.setAttribute('pathLength', '1');
-      if (animate) path.style.transitionDelay = i * 0.04 + 's';
-      svg.appendChild(path);
-    });
-    pose.forEach(function (p) {
-      if (!sure(p)) return;
-      var dot = document.createElementNS(SVG_NS, 'circle');
-      dot.setAttribute('cx', p[0] * W);
-      dot.setAttribute('cy', p[1] * H);
-      dot.setAttribute('r', 7);
-      svg.appendChild(dot);
-    });
-    if (!animate) { svg.classList.add('drawn'); return; }
-    // Two frames so the undrawn state is painted before the transition starts.
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () { svg.classList.add('drawn'); });
-    });
-  }
+  var CYCLE_MS = 3200; // matches the .tick animation in site.css
 
   function hero() {
-    var root = document.querySelector('.hero-shot');
-    if (!root) return;
-    var frames = Array.prototype.slice.call(root.querySelectorAll('.frame'));
-    var svg = root.querySelector('.skeleton');
-    var chip = root.querySelector('.moment-chip');
-    var poses = window.HERO_POSES || {};
-    var contact = Math.max(0, frames.findIndex(function (f) { return f.classList.contains('frame-contact'); }));
+    var shot = document.querySelector('.shot');
+    var row = document.querySelector('.moments');
+    if (!shot || !row) return;
+    var frames = Array.prototype.slice.call(shot.querySelectorAll('.frame'));
+    var buttons = Array.prototype.slice.call(row.querySelectorAll('.moment'));
+    var order = buttons.map(function (b) { return b.dataset.moment; });
+    var current = 0, timer = null, inView = true, paused = reduce;
 
-    function show(i, animate) {
-      frames.forEach(function (f, j) { f.classList.toggle('on', j === i); });
-      drawSkeleton(svg, poses[frames[i].dataset.key], animate);
-      chip.textContent = frames[i].dataset.moment;
-      if (animate) {
-        chip.classList.remove('pop');
-        void chip.offsetWidth; // restart the animation
-        chip.classList.add('pop');
-      }
+    function show(i) {
+      current = i;
+      var id = order[i];
+      frames.forEach(function (f) { f.classList.toggle('on', f.dataset.moment === id); });
+      buttons.forEach(function (b) {
+        var on = b.dataset.moment === id;
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
     }
-
-    if (reduce || !canObserve) { show(contact, false); return; }
-
-    var current = 0, timer = null, inView = false;
-    show(current, true);
     function start() {
-      if (timer || !inView || document.hidden) return;
-      timer = setInterval(function () {
-        current = (current + 1) % frames.length;
-        show(current, true);
-      }, CYCLE_MS);
+      if (timer || paused || !inView || document.hidden) return;
+      row.classList.add('timing');
+      // Restart the active button's timer bar in step with the interval.
+      var on = buttons[current];
+      on.classList.remove('on'); void on.offsetWidth; on.classList.add('on');
+      timer = setInterval(function () { show((current + 1) % order.length); }, CYCLE_MS);
     }
-    function stop() { clearInterval(timer); timer = null; }
-    new IntersectionObserver(function (entries) {
-      inView = entries[0].isIntersecting;
-      if (inView) start(); else stop();
-    }).observe(root);
+    function stop() {
+      clearInterval(timer); timer = null;
+      row.classList.remove('timing');
+    }
+
+    buttons.forEach(function (b, i) {
+      b.addEventListener('click', function () {
+        // A visitor who picks a moment is in charge from then on.
+        paused = true;
+        stop();
+        show(i);
+      });
+    });
+
+    if (reduce) return;
+    if (canObserve) {
+      new IntersectionObserver(function (entries) {
+        inView = entries[0].isIntersecting;
+        if (inView) start(); else stop();
+      }).observe(shot);
+    } else {
+      start();
+    }
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) stop(); else start();
     });
@@ -93,11 +73,12 @@
     el.textContent = '0';
     function step(t) {
       if (t0 === null) t0 = t;
-      var k = Math.min((t - t0) / 1200, 1);
+      var k = Math.min((t - t0) / 1400, 1);
       el.textContent = String(Math.round(to * (1 - Math.pow(1 - k, 3))));
       if (k < 1) requestAnimationFrame(step);
     }
-    requestAnimationFrame(step);
+    // Start as the hero image rises in.
+    setTimeout(function () { requestAnimationFrame(step); }, 350);
   }
 
   function reveals() {
