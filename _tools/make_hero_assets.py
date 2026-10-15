@@ -1,4 +1,4 @@
-"""Makes the launch site's hero frames, skeletons, icon and app still.
+"""Makes the launch site's hero frames, skeletons and icon.
 
 Everyone except the owner is blurred: a YOLO segmentation model finds the
 person under the owner's hint point (owner_hints.json) and any ball, and the
@@ -124,15 +124,11 @@ def main() -> None:
     icon = cv2.imread(str(args.ss / "mobile" / "assets" / "icon.png"))
     cv2.imwrite(str(out / "icon-180.png"), cv2.resize(icon, (180, 180), interpolation=cv2.INTER_AREA))
 
-    # One still from the result-screen recording, not the video: its first
-    # seconds show a bystander's face. Frame 191 is the breakdown and progress
-    # chart, with nobody in it.
-    cap = cv2.VideoCapture(str(onboarding / "results-demo.mp4"))
-    cap.set(cv2.CAP_PROP_POS_FRAMES, 191)
-    ok, frame = cap.read()
-    if not ok:
-        raise SystemExit("could not read the demo video")
-    cv2.imwrite(str(out / "results-progress.webp"), frame, [cv2.IMWRITE_WEBP_QUALITY, 80])
+    # The result-screen recording (assets/results-screen.mp4) is made separately
+    # from the app's current mobile/assets/onboarding/results-demo.mp4 and checked
+    # by eye for bystanders first:
+    #   ffmpeg -i results-demo.mp4 -an -c:v libx264 -preset slow -crf 27     #     -pix_fmt yuv420p -movflags +faststart results-screen.mp4
+    #   ffmpeg -ss 1.5 -i results-demo.mp4 -frames:v 1 -c:v libwebp -quality 78 results-screen.webp
     print("done:", ", ".join(f"{n} {sum(p[2] >= 0.5 for p in poses[n])}/13 joints sure" for n in NAMES))
 
 

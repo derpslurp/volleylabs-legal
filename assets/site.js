@@ -90,7 +90,57 @@
         io.unobserve(e.target);
       });
     }, { rootMargin: '0px 0px -8% 0px' });
-    els.forEach(function (e) { io.observe(e); });
+    els.forEach(function (e) {
+      // Items in one group (steps, cards, plans) fade in one after another.
+      var group = Array.prototype.filter.call(e.parentNode.children, function (c) {
+        return c.classList.contains('reveal');
+      });
+      e.style.setProperty('--stagger', Math.min(group.indexOf(e), 4) * 0.1 + 's');
+      io.observe(e);
+    });
+  }
+
+  // The result-screen recording plays while it is on screen; a tap pauses it.
+  function resultVideo() {
+    var v = document.querySelector('.phone-video');
+    if (!v) return;
+    var userPaused = false;
+    function play() {
+      var p = v.play();
+      if (p && p.catch) p.catch(function () { v.controls = true; }); // Low Power Mode
+    }
+    v.addEventListener('click', function () {
+      userPaused = !v.paused;
+      if (v.paused) play(); else v.pause();
+    });
+    if (!canObserve) { v.controls = true; return; }
+    new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting && !userPaused) play(); else v.pause();
+    }, { threshold: 0.35 }).observe(v);
+  }
+
+  // Eased scrolling for mouse wheels and trackpads: the page glides to where
+  // the wheel points instead of jumping. Touch screens keep native scrolling,
+  // and keyboard, scrollbar and link scrolling are left alone.
+  function smoothWheel() {
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+    var EASE = 0.11;
+    var target = window.scrollY, current = target, running = false;
+    function maxY() { return document.documentElement.scrollHeight - window.innerHeight; }
+    function tick() {
+      current += (target - current) * EASE;
+      if (Math.abs(target - current) < 0.5) current = target;
+      window.scrollTo({ top: current, behavior: 'instant' });
+      if (current !== target) requestAnimationFrame(tick); else running = false;
+    }
+    window.addEventListener('wheel', function (e) {
+      if (e.ctrlKey || e.defaultPrevented || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return; // zoom, sideways
+      e.preventDefault();
+      var step = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY;
+      if (!running) { current = window.scrollY; target = current; }
+      target = Math.max(0, Math.min(maxY(), target + step));
+      if (!running) { running = true; requestAnimationFrame(tick); }
+    }, { passive: false });
   }
 
   // The web fonts arrive after the first paint and change how headings wrap,
@@ -114,5 +164,7 @@
   hero();
   countUp();
   reveals();
+  resultVideo();
+  smoothWheel();
   keepDeepLink();
 })();
