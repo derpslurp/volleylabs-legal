@@ -160,14 +160,15 @@ html:not(.js) .moments { display: none; }
 .foot nav { display: flex; flex-wrap: wrap; gap: 24px; }
 .foot a { color: var(--chalk2); }
 
-/* Motion: only once site.js has run (it adds .js), never for reduced motion. */
+/* Motion: only once site.js has run (it adds .js). Reduced motion keeps the
+   fades, skeleton draw and cycling but drops movement (rises, lifts). */
 @keyframes vlRise { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: none; } }
 @keyframes vlFade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes vlDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes vlPop { from { opacity: 0; transform: translateY(8px) scale(.94); } to { opacity: 1; transform: none; } }
 @keyframes vlTick { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
-@media (prefers-reduced-motion: no-preference) {
+@media all {
   .js .load1 { animation: vlRise .8s var(--ease) both; }
   .js .load2 { animation: vlRise .8s var(--ease) .12s both; }
   .js .load3 { animation: vlRise .8s var(--ease) .24s both; }
@@ -197,5 +198,8 @@ html:not(.js) .moments { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .bar i::after { transition: none; }
+  .js .load1, .js .load2, .js .load3, .js .load4, .js .load5 { animation-name: vlFade; }
+  .js .frame.on .tag, .js .frame.on .callout { animation-name: vlFade; }
+  .js .reveal { transform: none; }
+  .lift:hover, .js .lift.reveal.in:hover { transform: none; }
 }

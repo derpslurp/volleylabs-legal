@@ -7,7 +7,7 @@
   'use strict';
   document.documentElement.classList.add('js');
 
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Reduced motion is handled in site.css: it keeps fades and drops movement.
   var canObserve = 'IntersectionObserver' in window;
   var CYCLE_MS = 3200; // matches the .tick animation in site.css
 
@@ -18,7 +18,7 @@
     var frames = Array.prototype.slice.call(shot.querySelectorAll('.frame'));
     var buttons = Array.prototype.slice.call(row.querySelectorAll('.moment'));
     var order = buttons.map(function (b) { return b.dataset.moment; });
-    var current = 0, timer = null, inView = true, paused = reduce;
+    var current = 0, timer = null, inView = true, paused = false;
 
     function show(i) {
       current = i;
@@ -52,7 +52,6 @@
       });
     });
 
-    if (reduce) return;
     if (canObserve) {
       new IntersectionObserver(function (entries) {
         inView = entries[0].isIntersecting;
@@ -68,7 +67,7 @@
 
   function countUp() {
     var el = document.querySelector('.score-num');
-    if (!el || reduce) return;
+    if (!el) return;
     var to = Number(el.dataset.to), t0 = null;
     el.textContent = '0';
     function step(t) {
@@ -83,7 +82,7 @@
 
   function reveals() {
     var els = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
-    if (reduce || !canObserve) { els.forEach(function (e) { e.classList.add('in'); }); return; }
+    if (!canObserve) { els.forEach(function (e) { e.classList.add('in'); }); return; }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (!e.isIntersecting) return;
