@@ -97,7 +97,7 @@ for pattern in (r"jump height", r"\b\d+\s?cm\b", r"\biPad\b", r"\bAndroid\b",
 # Visible without JavaScript: site.js sets the class, and only .js rules hide.
 check("classList.add('js')" not in html, "the js class must come from site.js, not inline")
 check("classList.add('js')" in js, "site.js must add the js class")
-for selector in re.findall(r"([^{}]+)\{[^}]*opacity:\s*0\s*[;}]", css):
+for selector in re.findall(r"([^{}]+)\{[^{}]*opacity:\s*0\s*[;}]", css):
     sel = selector.strip()
     if sel in ("from", "to") or sel.endswith("%"):
         continue  # keyframes
