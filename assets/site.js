@@ -122,6 +122,47 @@
   // Eased scrolling for mouse wheels and trackpads: the page glides to where
   // the wheel points instead of jumping. Touch screens keep native scrolling,
   // and keyboard, scrollbar and link scrolling are left alone.
+  var linkScroll = null; // the in-page link scroll in progress, if any
+
+  // In-page links (the menu, "See how it works", Support) ease to their
+  // section: a gentle start and finish, landing just under the sticky menu.
+  function easeLinks() {
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function easeInOut(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+    document.addEventListener('click', function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target.closest && e.target.closest('a[href^="#"]');
+      if (!a) return;
+      var id = a.getAttribute('href').slice(1);
+      var el = id ? document.getElementById(id) : null;
+      if (!el) return;
+      e.preventDefault();
+      var margin = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      var from = window.scrollY;
+      var to = Math.max(0, Math.min(max, el.getBoundingClientRect().top + from - margin));
+      var dist = Math.abs(to - from);
+      // Longer trips take a little longer, within limits.
+      var ms = Math.min(1400, Math.max(500, dist * 0.35));
+      if (reduced) ms = Math.min(ms, 450);
+      var t0 = null, run = {};
+      linkScroll = run;
+      function step(t) {
+        if (linkScroll !== run) return; // a newer link or the wheel took over
+        if (t0 === null) t0 = t;
+        var k = Math.min((t - t0) / ms, 1);
+        window.scrollTo({ top: from + (to - from) * easeInOut(k), behavior: 'instant' });
+        if (k < 1) { requestAnimationFrame(step); return; }
+        linkScroll = null;
+        if (history.pushState) history.pushState(null, '', '#' + id);
+        // Move keyboard focus to the section without jumping again.
+        if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1');
+        el.focus({ preventScroll: true });
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
   function smoothWheel() {
     if (!window.matchMedia('(pointer: fine)').matches) return;
     var EASE = 0.11;
@@ -136,6 +177,7 @@
     window.addEventListener('wheel', function (e) {
       if (e.ctrlKey || e.defaultPrevented || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return; // zoom, sideways
       e.preventDefault();
+      linkScroll = null;
       var step = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY;
       if (!running) { current = window.scrollY; target = current; }
       target = Math.max(0, Math.min(maxY(), target + step));
@@ -165,6 +207,7 @@
   countUp();
   reveals();
   resultVideo();
+  easeLinks();
   smoothWheel();
   keepDeepLink();
 })();

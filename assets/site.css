@@ -19,6 +19,7 @@ h3 { font-weight: 700; font-size: 30px; line-height: 1.05; }
 p { margin: 0; }
 [id] { scroll-margin-top: 84px; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+section:focus { outline: none; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .skip { position: absolute; left: -999px; }
 .skip:focus { left: 16px; top: 16px; z-index: 20; background: var(--panel); padding: 8px 12px; }
