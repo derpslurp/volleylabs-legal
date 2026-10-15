@@ -130,7 +130,7 @@ def main() -> None:
     ok, frame = cap.read()
     if not ok:
         raise SystemExit("could not read the demo video")
-    cv2.imwrite(str(out / "results-demo.jpg"), frame, [cv2.IMWRITE_JPEG_QUALITY, 80])
+    cv2.imwrite(str(out / "results-demo.webp"), frame, [cv2.IMWRITE_WEBP_QUALITY, 72])
     print("done:", ", ".join(f"{n} {sum(p[2] >= 0.5 for p in poses[n])}/13 joints sure" for n in NAMES))
 
 
