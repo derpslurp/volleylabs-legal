@@ -12,7 +12,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 SITE = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().parents[1]
-HERO = ("takeoff", "contact", "follow", "landing")
+HERO = ("contact", "follow", "landing")  # no takeoff: another face behind the owner
 JOINT_COUNT = 13  # backend app/pipeline/thumbnail_pose.py JOINTS
 MAX_HERO_BYTES = 150_000
 errors: list[str] = []
