@@ -126,6 +126,62 @@ html:not(.js) .moments { display: none; }
 .phone img, .phone video { display: block; width: 100%; height: 100%; object-fit: cover; }
 .phone video { cursor: pointer; }
 
+/* Why choose VolleyLabs */
+.why { padding-bottom: 112px; }
+.versus { margin-top: 48px; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
+.vs { min-width: 0; padding: 32px; border-radius: 24px; }
+.vs-them { border: 1px dashed var(--line); }
+.vs-us { position: relative; background: var(--panel); border: 2px solid var(--fill); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), 0 34px 80px -34px rgba(37, 99, 235, .6); }
+.vs-name { font: 800 30px/1.05 var(--head); text-transform: uppercase; }
+.vs-them .vs-name { color: var(--chalk3); }
+.vs ul { margin: 20px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; }
+.vs li { position: relative; padding-left: 30px; color: var(--chalk2); }
+.vs-them li { color: var(--chalk3); }
+.vs-them li::before, .vs-them li::after { content: ""; position: absolute; left: 3px; top: .72em; width: 14px; height: 2px; border-radius: 1px; background: var(--chalk3); transform: rotate(45deg); }
+.vs-them li::after { transform: rotate(-45deg); }
+.vs-us li { color: var(--chalk); }
+.vs-us li::before { content: ""; position: absolute; left: 2px; top: .38em; width: 14px; height: 8px; border-left: 2.5px solid var(--good); border-bottom: 2.5px solid var(--good); transform: rotate(-45deg); }
+/* Six reasons on a volleyball court: front row (4 3 2) at the net, back row
+   (5 6 1) behind the attack line, numbered like the rotation. */
+.court-wrap { position: relative; margin-top: 64px; }
+.court-kicker { margin-bottom: 18px; color: var(--accent); font-weight: 700; font-size: 14px; letter-spacing: .16em; text-transform: uppercase; }
+.net { position: relative; z-index: 1; height: 20px; margin: 0 -14px; border-top: 4px solid var(--chalk); border-radius: 2px;
+  background: repeating-linear-gradient(45deg, rgba(238, 242, 248, .16) 0 1px, transparent 1px 8px), repeating-linear-gradient(-45deg, rgba(238, 242, 248, .16) 0 1px, transparent 1px 8px);
+  box-shadow: 0 14px 30px -12px rgba(0, 0, 0, .7); }
+.net::before, .net::after { content: ""; position: absolute; top: -14px; width: 8px; height: 44px; border-radius: 3px; background: var(--chalk3); }
+.net::before { left: -4px; } .net::after { right: -4px; }
+.rot-court { position: relative; margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-areas: "p4 p3 p2" "p5 p6 p1";
+  border: 2px solid rgba(238, 242, 248, .3); border-top: 0; border-radius: 0 0 6px 6px;
+  background: linear-gradient(180deg, rgba(37, 99, 235, .13), rgba(37, 99, 235, .03) 60%), var(--ink2); box-shadow: 0 40px 90px -40px rgba(0, 0, 0, .8); }
+.p1 { grid-area: p1; } .p2 { grid-area: p2; } .p3 { grid-area: p3; } .p4 { grid-area: p4; } .p5 { grid-area: p5; } .p6 { grid-area: p6; }
+.p2, .p3, .p4 { min-height: 250px; border-bottom: 2px solid rgba(238, 242, 248, .3); }
+.p5, .p6, .p1 { min-height: 300px; }
+.p4, .p3, .p5, .p6 { border-right: 1px dashed rgba(238, 242, 248, .09); }
+/* --lit (0 to 1) drives every part of a position's highlight, so it can
+   fade smoothly: by transition when hovered, frame by frame when scrubbed. */
+@property --lit { syntax: '<number>'; inherits: true; initial-value: 0; }
+.zone { --lit: 0; position: relative; min-width: 0; padding: 40px 32px 36px; outline-offset: -4px; transition: --lit .5s ease; }
+.zone.on { --lit: 1; }
+.zone .pos { position: absolute; right: 22px; top: 12px; font: 800 104px/1 var(--head); color: rgba(110, 160, 255, var(--lit)); -webkit-text-stroke: 1.5px rgba(110, 160, 255, calc(.22 + .78 * var(--lit))); text-shadow: 0 0 40px rgba(110, 160, 255, calc(.45 * var(--lit))); }
+.zone h3 { position: relative; max-width: 11em; margin-top: 54px; font-size: 32px; }
+.zone p { position: relative; max-width: 26em; margin-top: 10px; color: var(--chalk2); }
+.js .zone::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: var(--lit);
+  background: radial-gradient(110% 90% at 85% 8%, rgba(37, 99, 235, .3), transparent 65%); }
+.rot-court.has-on .zone { opacity: calc(.42 + .58 * var(--lit)); }
+.ball { position: absolute; left: 0; top: 0; z-index: 3; width: 46px; height: 46px; display: none; pointer-events: none; will-change: transform; filter: drop-shadow(0 10px 12px rgba(0, 0, 0, .55)); }
+.ball svg { width: 100%; height: 100%; }
+.ball circle { fill: var(--chalk); stroke: #C9D4E6; stroke-width: 1.5; }
+.ball path { fill: none; stroke: var(--fill); stroke-width: 2.4; stroke-linecap: round; }
+.vl-motion .court-wrap.has-ball .ball { display: block; }
+@media (max-width: 899px) {
+  .rot-court { grid-template-columns: minmax(0, 1fr); grid-template-areas: "p1" "p2" "p3" "p4" "p5" "p6"; }
+  .zone, .p2, .p3, .p4, .p5, .p6, .p1 { min-height: 0; border-right: 0; border-bottom: 1px dashed rgba(238, 242, 248, .12); }
+  .p6 { border-bottom: 0; }
+  .zone { padding: 28px 22px; }
+  .zone .pos { font-size: 72px; right: 16px; top: 8px; }
+  .zone h3 { margin-top: 30px; font-size: 28px; padding-right: 56px; }
+}
+
 .skills { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 36px 0; }
 .skills-in { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 40px; font: 800 clamp(40px, 6vw, 80px)/1 var(--head); text-transform: uppercase; }
 .skills-in .soon { color: transparent; -webkit-text-stroke: 1.5px var(--chalk3); margin-right: -24px; }
@@ -198,6 +254,106 @@ html:not(.js) .moments { display: none; }
   .js .lift.reveal.in:hover { transform: translateY(-4px); }
   .faq details[open] p { animation: vlFade .3s ease both; }
 }
+/* Motion layer: motion.js adds .vl-motion only when GSAP loaded and motion is
+   allowed, so none of this applies otherwise. */
+html.lenis, html.lenis body { height: auto; }
+html.lenis { scroll-behavior: auto !important; } /* Lenis smooths; native smoothing on top fights it */
+.lenis.lenis-stopped { overflow: clip; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+
+.vl-motion .nav { transition: transform .45s var(--ease); }
+.vl-motion .nav.nav-hidden { transform: translateY(-100%); }
+.vl-motion .nav.nav-hidden:focus-within { transform: none; }
+.nav-progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: linear-gradient(90deg, var(--fill), var(--accent) 60%, var(--good)); transform: scaleX(0); transform-origin: left; pointer-events: none; }
+
+.eyebrow .eb-text { width: auto; height: auto; background: none; }
+.vl-dots { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 22%, #000 58%); mask-image: linear-gradient(to bottom, transparent 22%, #000 58%); }
+/* The 3D court floor replaces the flat court outline. */
+.vl-motion .court { display: none; }
+
+/* The hero card's layers separate as it tilts: photo and skeleton sink (and
+   are scaled up so their edges never show), labels float forward. */
+.vl-layers.shot { box-shadow: calc(var(--px, 0) * -26px) calc(50px + var(--py, 0) * -26px) 110px -40px rgba(37, 99, 235, .55), 0 20px 40px -20px rgba(0, 0, 0, .6); }
+.vl-layers .frame picture, .vl-layers .skel { scale: 1.07; translate: calc(var(--px, 0) * -8px) calc(var(--py, 0) * -8px); }
+.vl-layers .tag, .vl-layers .callout { translate: calc(var(--px, 0) * 10px) calc(var(--py, 0) * 10px); box-shadow: 0 10px 24px rgba(0, 0, 0, .45); }
+.vl-layers .score-card { translate: calc(var(--px, 0) * 16px) calc(var(--py, 0) * 16px); box-shadow: 0 16px 34px rgba(0, 0, 0, .55); }
+
+.vl-motion .shot { will-change: transform; }
+.js .vl-glare { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0; transition: opacity .4s ease;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, .22), transparent 55%); mix-blend-mode: overlay; }
+.js .shot.tilting .vl-glare { opacity: 1; }
+
+.vl-motion .steps li { border-top-color: transparent; background: linear-gradient(var(--fill), var(--fill)) 0 0 / calc(var(--sl, 0) * 100%) 2px no-repeat, linear-gradient(var(--line), var(--line)) 0 0 / 100% 2px no-repeat; background-origin: border-box; }
+.vl-motion .num { background: linear-gradient(to top, var(--accent) calc(var(--sn, 0) * 100%), transparent 0); -webkit-background-clip: text; background-clip: text; }
+
+.vl-motion .fix .kicker { color: transparent; background: linear-gradient(110deg, rgba(255, 255, 255, .7) 35%, #fff 50%, rgba(255, 255, 255, .7) 65%) 0 0 / 250% 100%; -webkit-background-clip: text; background-clip: text; animation: vlShine 3.2s linear infinite; }
+@keyframes vlShine { from { background-position: 100% 0; } to { background-position: -150% 0; } }
+
+/* Spotlight under the cursor; sits behind the card's content. */
+.spot { position: relative; isolation: isolate; overflow: hidden; }
+.js .spot::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0; transition: opacity .35s ease;
+  background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), rgba(110, 160, 255, .16), transparent 65%); }
+.js .fix.spot::before { background: radial-gradient(460px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, .2), transparent 65%); }
+.js .spot:hover::before { opacity: 1; }
+
+/* Coach reply: typing dots, then the text types in over its own reserved space. */
+.vl-motion .msg-coach { position: relative; }
+.msg-coach .rest { visibility: hidden; }
+.msg-coach .caret { display: inline-block; width: 2px; height: 1.05em; margin: 0 1px -2px; background: var(--accent); animation: vlBlink .9s steps(1) infinite; }
+.msg-coach.is-waiting .caret, .msg-coach.is-done .caret { display: none; }
+.msg-coach .typing { position: absolute; left: 14px; top: 14px; display: none; gap: 5px; }
+.msg-coach.is-waiting .typing { display: flex; }
+.msg-coach .typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--chalk3); animation: vlBounce 1s ease-in-out infinite; }
+.msg-coach .typing i:nth-child(2) { animation-delay: .15s; } .msg-coach .typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes vlBlink { 50% { opacity: 0; } }
+@keyframes vlBounce { 0%, 60%, 100% { transform: none; opacity: .5; } 30% { transform: translateY(-5px); opacity: 1; } }
+
+.vl-motion .phone { will-change: transform; box-shadow: 0 30px 60px -20px rgba(37, 99, 235, .35); }
+
+/* Skills marquee. */
+.vl-motion .skills { padding: 28px 0; overflow: hidden; }
+.vl-marquee { display: flex; flex-direction: column; gap: 6px; transform: perspective(900px) rotateX(16deg); transform-origin: 50% 0; }
+.vl-row-alt { opacity: .85; }
+.vl-row-alt .vl-item { font-size: clamp(34px, 5.4vw, 74px); }
+.vl-row { overflow: hidden; }
+.vl-track { display: flex; width: max-content; will-change: transform; }
+.vl-unit { display: flex; align-items: center; flex: none; }
+.vl-item { display: inline-flex; align-items: flex-start; gap: 6px; padding: 0 28px; font: 800 clamp(44px, 7vw, 96px)/1.05 var(--head); text-transform: uppercase; white-space: nowrap; }
+.vl-row-alt .vl-item { color: transparent; -webkit-text-stroke: 1.5px var(--chalk3); }
+.vl-item.soon { color: transparent; -webkit-text-stroke: 1.5px var(--line); }
+.vl-item small { margin-top: .5em; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--line); font: 600 13px var(--body); letter-spacing: .1em; color: var(--chalk3); -webkit-text-stroke: 0; }
+.vl-ball { flex: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); box-shadow: inset -4px -3px 0 rgba(11, 18, 32, .35); }
+.vl-row-alt .vl-ball { background: var(--good); }
+
+/* Pro plan: a light runs round its border; every plan catches a glare on hover. */
+@property --ang { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+.vl-motion .plan { position: relative; }
+.vl-motion .plan-main { border-color: transparent; background: linear-gradient(var(--panel), var(--panel)) padding-box, conic-gradient(from var(--ang), var(--fill), var(--good) 18%, var(--fill) 34%, var(--fill) 66%, var(--accent) 84%, var(--fill)) border-box; animation: vlSpin 5s linear infinite; }
+@keyframes vlSpin { to { --ang: 360deg; } }
+.vl-motion .plan::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, .09) 50%, transparent 65%) 200% 0 / 250% 100% no-repeat; }
+.vl-motion .plan:hover::after { background-position: -100% 0; transition: background-position .9s var(--ease); }
+
+.vl-motion .faq details p { overflow: hidden; animation: none; }
+.vl-motion .faq details.closing .plus { transform: none; }
+
+.vl-motion .wordmark { background: linear-gradient(90deg, var(--fill), var(--accent)) 0 0 / calc(var(--wp, 0) * 100%) 100% no-repeat; -webkit-background-clip: text; background-clip: text; }
+
+.vl-sparks { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 50; pointer-events: none; }
+
+/* Depth for every visitor, with or without scripts or motion: ambient light
+   behind the page, a fine film grain over it, cards that sit above the page
+   rather than on it, and an extruded footer wordmark. */
+body::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(42% 38% at 80% 10%, rgba(37, 99, 235, .2), transparent 70%), radial-gradient(34% 30% at 4% 60%, rgba(55, 224, 166, .07), transparent 70%), radial-gradient(50% 40% at 60% 108%, rgba(110, 160, 255, .1), transparent 70%); }
+body::after { content: ""; position: fixed; inset: 0; z-index: 70; pointer-events: none; opacity: .055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.card, .plan { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05), 0 2px 4px rgba(0, 0, 0, .25), 0 26px 50px -24px rgba(0, 0, 0, .75); }
+.fix { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 34px 80px -30px rgba(37, 99, 235, .65); }
+.shot { box-shadow: 0 50px 110px -40px rgba(37, 99, 235, .5), 0 20px 40px -20px rgba(0, 0, 0, .6); }
+.wordmark { filter: drop-shadow(0 2px 0 rgba(37, 99, 235, .35)) drop-shadow(0 2px 0 rgba(37, 99, 235, .22)) drop-shadow(0 2px 0 rgba(37, 99, 235, .12)) drop-shadow(0 18px 24px rgba(0, 0, 0, .55)); }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .js .load1, .js .load2, .js .load3, .js .load4, .js .load5 { animation-name: vlFade; }

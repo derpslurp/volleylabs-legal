@@ -207,7 +207,14 @@
   countUp();
   reveals();
   resultVideo();
-  easeLinks();
-  smoothWheel();
+  // motion.js scrolls with Lenis when GSAP and Lenis load and motion is
+  // allowed; these hand-rolled versions are the fallback for everyone else.
+  var lenisScrolls = window.Lenis && window.gsap && window.ScrollTrigger &&
+    window.SplitText && window.ScrambleTextPlugin &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!lenisScrolls) {
+    easeLinks();
+    smoothWheel();
+  }
   keepDeepLink();
 })();

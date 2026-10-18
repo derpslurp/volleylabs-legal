@@ -15,7 +15,15 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap"></noscript>
 <link rel="stylesheet" href="assets/site.css">
+<!-- Motion: GSAP 3.15.0 + Lenis 1.3.26 (copied from npm), then the page's own
+     scripts. Each is optional; the page reads the same if any fail to load. -->
+<script src="assets/vendor/gsap.min.js" defer></script>
+<script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+<script src="assets/vendor/SplitText.min.js" defer></script>
+<script src="assets/vendor/ScrambleTextPlugin.min.js" defer></script>
+<script src="assets/vendor/lenis.min.js" defer></script>
 <script src="assets/site.js" defer></script>
+<script src="assets/motion.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -155,6 +163,46 @@
         </div>
         <div class="phone"><video class="phone-video" src="assets/results-screen.mp4" poster="assets/results-screen.webp" muted loop playsinline preload="none" width="540" height="1104" aria-label="Screen recording of a VolleyLabs result: the score, what happened, the fix to work on and the breakdown. Tap to pause."></video></div>
       </article>
+    </div>
+  </div>
+</section>
+
+<section class="section section-tight why" id="why" aria-labelledby="why-title">
+  <div class="wrap">
+    <h2 id="why-title" class="reveal">Why choose<br><em>VolleyLabs.</em></h2>
+    <p class="section-lede reveal">Built for one job: helping you fix your technique, one rep at a time.</p>
+
+    <div class="versus">
+      <div class="vs vs-them reveal">
+        <p class="vs-name">Watching it back yourself</p>
+        <ul>
+          <li>Scrub through the clip hunting for the moment</li>
+          <li>Guess what went wrong, and what to change</li>
+          <li>Nothing to compare against next week</li>
+        </ul>
+      </div>
+      <div class="vs vs-us reveal">
+        <p class="vs-name">With VolleyLabs</p>
+        <ul>
+          <li>Your key moments found and marked for you</li>
+          <li>Every part scored, and the one fix that matters most</li>
+          <li>Every rep saved, with your scores on a progress chart</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="court-wrap">
+      <p class="court-kicker reveal">One reason for every position on the court</p>
+      <div class="net" aria-hidden="true"></div>
+      <ol class="rot-court" aria-label="Six reasons, laid out as the six positions on a volleyball court">
+        <li class="zone p1" tabindex="0"><span class="pos" aria-hidden="true">1</span><h3>Made for volleyball</h3><p>Spike, serve and block, broken into the moments that matter: contact, follow-through, landing. Not a general fitness tracker.</p></li>
+        <li class="zone p2" tabindex="0"><span class="pos" aria-hidden="true">2</span><h3>Follows only you</h3><p>Busy court? Tap yourself and VolleyLabs tracks you through the whole rep, not the player next to you.</p></li>
+        <li class="zone p3" tabindex="0"><span class="pos" aria-hidden="true">3</span><h3>One fix, not twenty</h3><p>Every analysis ends with your highest-yield fix, a cue to think about and a drill to practise it.</p></li>
+        <li class="zone p4" tabindex="0"><span class="pos" aria-hidden="true">4</span><h3>Ask the coach</h3><p>Not sure why? Ask. The coach has seen your clip and your recent reps, so its answers are about you.</p></li>
+        <li class="zone p5" tabindex="0"><span class="pos" aria-hidden="true">5</span><h3>Just your phone</h3><p>No sensors, no setup. Practice, games or a friend's phone all work. Upload from Photos or Files.</p></li>
+        <li class="zone p6" tabindex="0"><span class="pos" aria-hidden="true">6</span><h3>Fair on bad clips</h3><p>If a clip can't be read, you're told why, and it doesn't use up an analysis. Your first analysis is free.</p></li>
+      </ol>
+      <span class="ball" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="21"/><path d="M24 3c-6 7-7 19 0 21s14 13 13 20M3.5 21c8-3 17 0 20.5 3S30 37 21.5 44.8M44.5 20c-7 4-14 4-20.5 4"/></svg></span>
     </div>
   </div>
 </section>
