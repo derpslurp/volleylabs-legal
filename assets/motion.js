@@ -525,7 +525,11 @@
       measure();
       var tl = gsap.timeline({
         scrollTrigger: {
-          trigger: wrap, pin: true, scrub: 1.4, invalidateOnRefresh: true,
+          // Measured first, though it is created after the effects below it:
+          // its pin adds scroll length, and a trigger measured before the pin
+          // exists sits thousands of pixels early (the skills marquee never
+          // ran because it thought you had scrolled past it).
+          trigger: wrap, pin: true, scrub: 1.4, invalidateOnRefresh: true, refreshPriority: 1,
           start: function () { return wrap.offsetHeight + 140 < window.innerHeight ? 'center center' : 'top 90px'; },
           end: '+=' + n * 480,
           onRefresh: function () { measure(); fly(1, 0); light(tl.time()); }
