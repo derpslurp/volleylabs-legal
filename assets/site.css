@@ -46,7 +46,8 @@ section:focus { outline: none; }
 h1 { font-weight: 800; font-size: clamp(60px, 9vw, 128px); line-height: .88; letter-spacing: -.01em; }
 .lede { margin-top: 28px; max-width: 30em; color: var(--chalk2); font-size: 20px; }
 .cta { margin-top: 36px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
-.store { display: inline-flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 24px; border-radius: 14px; background: var(--chalk); color: var(--ink); font-weight: 700; }
+.store { display: inline-flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 24px; border-radius: 14px; background: var(--chalk); color: var(--ink); font-weight: 700; text-decoration: none; transition: transform .15s ease; }
+.store:hover { color: var(--ink); transform: translateY(-1px); }
 .store svg { width: 20px; height: 20px; fill: currentColor; }
 .ghost { display: inline-flex; align-items: center; min-height: 56px; padding: 0 20px; border-radius: 14px; border: 1px solid var(--line); color: var(--chalk); text-decoration: none; font-weight: 600; }
 .ghost:hover { color: var(--chalk); border-color: var(--accent); }
