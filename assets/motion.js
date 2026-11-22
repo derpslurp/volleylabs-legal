@@ -375,7 +375,7 @@
   function marquee() {
     var list = $('.skills-in');
     if (!list) return;
-    var skills = [['Spike'], ['Serve'], ['Block'], ['Set', true], ['Dig', true]];
+    var skills = [['Spike'], ['Serve'], ['Block'], ['Dig'], ['Set', true]];
     var stage = document.createElement('div');
     stage.className = 'vl-marquee';
     stage.setAttribute('aria-hidden', 'true');
